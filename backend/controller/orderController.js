@@ -2,6 +2,9 @@ const Order = require('../models/Ordermodel');
 const logActivity = require('../libs/logger');
 const ProductModel = require('../models/Productmodel');
 
+const { checkLowStock } = require('../libs/stockAlert');
+const { syncInventory } = require('../libs/inventorySync');
+
 const createOrder = async (req, res) => {
     try {
         const { user, Description,Product, status } = req.body;
@@ -20,16 +23,17 @@ const createOrder = async (req, res) => {
         const productRecord = await ProductModel.findById(product);
         if (!productRecord) return res.status(404).json({ message: "Product not found" });
 
-        if (productRecord.quantity < quantity) {
-            return res.status(400).json({ 
-                message: "Insufficient product quantity",
-                available: productRecord.quantity,
-                requested: quantity
-            });
+        // If status is 'delivered' at creation, increase stock immediately
+        if (status === "delivered") {
+            productRecord.quantity += quantity;
+            await productRecord.save();
+            
+            // Sync Inventory status
+            await syncInventory(productRecord._id, productRecord.quantity);
+            
+            const io = req.app.get("io");
+            await checkLowStock(productRecord, io);
         }
-
-        productRecord.quantity -= quantity;
-        await productRecord.save();
 
         const newOrder = new Order({
             user,
@@ -110,22 +114,39 @@ const updatestatusOrder = async (req, res) => {
         const userId = req.user._id;
         const ipAddress = req.ip;
 
-   
-        if (updates.Product && Array.isArray(updates.Product)) {
-            updates.totalAmount = updates.Product.reduce((sum, item) => sum + item.quantity * item.price, 0);
-        }
-
-  
-        const updatedOrder = await Order.findByIdAndUpdate(OrderId, updates, { new: true });
-
-        if (!updatedOrder) {
+        const currentOrder = await Order.findById(OrderId);
+        if (!currentOrder) {
             return res.status(404).json({ message: "Order not found" });
         }
 
+        // Auto-calculate totalAmount if quantity/price change
+        const prodData = updates.Product || updates.products;
+        if (prodData && prodData.quantity && prodData.price) {
+            updates.totalAmount = prodData.quantity * prodData.price;
+        }
+
+        const transitioningToDelivered = updates.status === "delivered" && currentOrder.status !== "delivered";
+
+        const updatedOrder = await Order.findByIdAndUpdate(OrderId, updates, { new: true });
+
+        // Automated Stock Replenishment
+        if (transitioningToDelivered) {
+            const productRecord = await ProductModel.findById(updatedOrder.Product?.product);
+            if (productRecord) {
+                productRecord.quantity += updatedOrder.Product.quantity;
+                await productRecord.save();
+                
+                // Sync Inventory status
+                await syncInventory(productRecord._id, productRecord.quantity);
+                
+                const io = req.app.get("io");
+                await checkLowStock(productRecord, io);
+            }
+        }
 
         await logActivity({
-            action: "Update Order",
-            description: `Order updated successfully.`,
+            action: "Update Order Status",
+            description: `Order status changed to ${updatedOrder.status}.`,
             entity: "order",
             entityId: updatedOrder._id,
             userId: userId,
@@ -134,6 +155,7 @@ const updatestatusOrder = async (req, res) => {
 
         res.status(200).json({ message: "Order successfully updated", order: updatedOrder });
     } catch (error) {
+        console.error("Update Order Error:", error);
         res.status(500).json({ message: "Error updating order", error: error.message });
     }
 };

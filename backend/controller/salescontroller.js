@@ -1,6 +1,7 @@
 const Sale = require("../models/Salesmodel");
 const ProductModel = require('../models/Productmodel');
-
+const { checkLowStock } = require("../libs/stockAlert");
+const { syncInventory } = require("../libs/inventorySync");
 
 module.exports.createSale = async (req, res) => {
   try {
@@ -20,12 +21,19 @@ module.exports.createSale = async (req, res) => {
         return res.status(400).json({ 
             message: "Insufficient product quantity",
             available: productRecord.quantity,
-            requested: quantity
+            requested: products.quantity
         });
     }
 
     productRecord.quantity -= products.quantity;
     await productRecord.save();
+
+    // Trigger Inventory sync
+    await syncInventory(productRecord._id, productRecord.quantity);
+
+    // Check for low stock alert
+    const io = req.app.get("io");
+    await checkLowStock(productRecord, io);
 
 
     const newSale = new Sale({

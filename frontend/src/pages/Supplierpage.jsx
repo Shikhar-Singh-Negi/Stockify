@@ -64,7 +64,7 @@ function Supplierpage() {
         email: Email,
         address: Address,
       },
-      productsSupplied: [Product],
+      productsSupplied: Product,
     };
 
     dispatch(EditSupplier({ supplierId: selectedSupplier._id, updatedData }))
@@ -86,7 +86,7 @@ function Supplierpage() {
     setPhone(supplier.contactInfo?.phone);
     setEmail(supplier.contactInfo?.email);
     setAddress(supplier.contactInfo?.address);
-    setProduct(supplier?.productsSupplied._id);
+    setProduct(supplier?.productsSupplied?._id || supplier?.productsSupplied || "");
     setIsFormVisible(true);
   };
 
@@ -161,7 +161,7 @@ function Supplierpage() {
         </div>
 
         {isFormVisible && (
-          <div className="absolute top-16 bg-base-100 right-0 h-svh p-6 border-2 border-gray-300 rounded-lg shadow-md transition-transform transform">
+          <div className="fixed top-16 bg-base-100 bg-gray-100 right-0 h-svh w-full md:w-96 p-6 border-2 border-gray-300 rounded-lg shadow-md transition-transform transform z-50 overflow-y-auto">
             <div className="text-right">
               <MdKeyboardDoubleArrowLeft
                 onClick={() => setIsFormVisible(false)}

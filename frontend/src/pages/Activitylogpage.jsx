@@ -7,7 +7,7 @@ import FormattedTime from "../lib/FormattedTime";
 import toast from "react-hot-toast";
 import axiosInstance from "../lib/axios";
 
-const fallbackURL = "https://advanced-inventory-management-system-v1.onrender.com";
+const fallbackURL = "https://stockify-backend-six.vercel.app";
 const socket = io(process.env.REACT_APP_BACKEND_URL || fallbackURL, {
    withCredentials: true,
    transports: ["websocket", "polling"], 

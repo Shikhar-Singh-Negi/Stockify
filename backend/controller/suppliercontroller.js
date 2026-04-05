@@ -71,15 +71,17 @@ module.exports.editSupplier = async (req, res) => {
    
     supplier.name = name || supplier.name;
     supplier.contactInfo = {
-      phone: contactInfo?.phone || supplier.contactInfo.phone,
-      email: contactInfo?.email || supplier.contactInfo.email,
-      address: contactInfo?.address || supplier.contactInfo.address,
+      phone: contactInfo?.phone || (supplier.contactInfo ? supplier.contactInfo.phone : ""),
+      email: contactInfo?.email || (supplier.contactInfo ? supplier.contactInfo.email : ""),
+      address: contactInfo?.address || (supplier.contactInfo ? supplier.contactInfo.address : ""),
     };
 
     
-    supplier.productsSupplied = Array.isArray(productsSupplied)
-      ? productsSupplied
-      : supplier.productsSupplied;
+    if (productsSupplied) {
+      supplier.productsSupplied = Array.isArray(productsSupplied) 
+        ? productsSupplied[0] 
+        : productsSupplied;
+    }
 
     const updatedSupplier = await supplier.save();
 

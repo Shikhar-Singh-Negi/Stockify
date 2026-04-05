@@ -101,7 +101,9 @@ module.exports.Addproduct=async(req,res)=>{
 
 
 
-    module.exports.EditProduct = async (req, res) => {
+const { checkLowStock } = require("../libs/stockAlert");
+
+     module.exports.EditProduct = async (req, res) => {
       try {
         const { productId, updatedData } = req.body;
         const userId = req.user._id;
@@ -133,6 +135,9 @@ module.exports.Addproduct=async(req,res)=>{
           ipAddress: ipAddress,
         });
     
+        // Check for low stock alert
+        const io = req.app.get("io");
+        await checkLowStock(updatedProduct, io);
        
         res.status(200).json(updatedProduct);
       } catch (error) {

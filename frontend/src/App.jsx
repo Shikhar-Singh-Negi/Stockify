@@ -1,7 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import Navbar from "./Components/Navbar";
-import Footer from "./Components/Footer";
 import SignupPage from "./pages/SignupPages";
 import ServicePage from "./pages/ServicePage";
 import LoginPage from "./pages/LoginPage";
@@ -21,7 +19,7 @@ import Dashboardpage from "./pages/Dashboardpage";
 import Userstatus from "./pages/Userstatus";
 import NotificationPageRead from "./pages/Notificationpageread"
 import ProtectedRoute from "./lib/ProtectedRoute";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (

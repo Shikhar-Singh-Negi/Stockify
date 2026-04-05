@@ -1,6 +1,6 @@
-const Inventory =require('../models/Inventorymodel')
+const Inventory = require('../models/Inventorymodel');
 const Product = require("../models/Productmodel");
-
+const { checkLowStock } = require("../libs/stockAlert");
 
 module.exports.addOrUpdateInventory = async (req, res) => {
   try {
@@ -27,6 +27,17 @@ module.exports.addOrUpdateInventory = async (req, res) => {
 
  
     await inventory.save();
+
+    // Check for low stock alert
+    const productRecord = await Product.findById(product);
+    if (productRecord) {
+      // Ensure productRecord.quantity is synced with inventory quantity
+      productRecord.quantity = quantity;
+      await productRecord.save();
+      
+      const io = req.app.get("io");
+      await checkLowStock(productRecord, io);
+    }
 
     res.status(200).json({ success: true, message: "Inventory updated successfully", inventory });
   } catch (error) {

@@ -124,11 +124,10 @@ module.exports.login=async(req,res)=>{
 
 
     } catch (error) {
-  res.status(400).json({
-    error:"Error in login to the page"
-  })
-
-        
+        console.error("Error in login Controller:", error.message);
+        res.status(500).json({
+            error: "Error in login: " + error.message
+        });
     }
 }
 

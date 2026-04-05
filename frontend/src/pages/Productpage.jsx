@@ -25,8 +25,9 @@ function Productpage() {
   const [Category, setCategory] = useState("");
   const [Price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [lowStockThreshold, setLowStockThreshold] = useState(10);
   const [Desciption, setDesciption] = useState("");
-  const [dateAdded, setDateAdded] = useState(new Date().toISOString().split('T')[0]); // Initialize with current date
+  const [dateAdded] = useState(new Date().toISOString().split('T')[0]); // Initialize with current date
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -67,6 +68,7 @@ function Productpage() {
       Category,
       Price,
       quantity,
+      lowStockThreshold,
       Desciption,
       dateAdded: selectedProduct.dateAdded || new Date().toISOString() 
     };
@@ -92,6 +94,7 @@ function Productpage() {
       Category, 
       Price, 
       quantity,
+      lowStockThreshold,
       dateAdded: new Date(dateAdded).toISOString() 
     };
 
@@ -111,6 +114,7 @@ function Productpage() {
     setCategory("");
     setPrice("");
     setQuantity("");
+    setLowStockThreshold(10);
     setDesciption("");
    
   };
@@ -121,6 +125,7 @@ function Productpage() {
     setCategory(product.Category?._id || "");
     setPrice(product.Price);
     setQuantity(product.quantity);
+    setLowStockThreshold(product.lowStockThreshold || 10);
     setDesciption(product.Desciption);
   
    
@@ -173,7 +178,7 @@ function Productpage() {
         </div>
 
         {isFormVisible && (
-          <div className="absolute top-16 bg-gray-100 right-0 h-svh p-6 border-2 border-gray-300 rounded-lg shadow-md transition-transform transform">
+          <div className="fixed top-16 bg-base-100 bg-gray-100 right-0 h-svh w-full md:w-96 p-6 border-2 border-gray-300 rounded-lg shadow-md transition-transform transform z-50 overflow-y-auto">
             <div className="text-right">
               <MdKeyboardDoubleArrowLeft
                 onClick={() => setIsFormVisible(false)}
@@ -255,6 +260,19 @@ function Productpage() {
 
               
 
+              <div className="mb-4">
+                <label>Low Stock Threshold</label>
+                <input
+                  type="number"
+                  placeholder="Enter low stock threshold"
+                  value={lowStockThreshold}
+                  onChange={(e) => setLowStockThreshold(e.target.value)}
+                  className="w-full h-10 px-2 border-2 rounded-lg mt-2"
+                  required
+                  min="0"
+                />
+              </div>
+
               <button
                 type="submit"
                 className="bg-blue-800 text-white w-full h-12 rounded-lg hover:bg-blue-700 mt-4"
@@ -285,11 +303,6 @@ function Productpage() {
                 {Array.isArray(displayProducts) &&
                 displayProducts.length > 0 ? (
                   displayProducts.map((product, index) => {
-                    // Format the date for display
-                    const formattedDate = product.dateAdded 
-                      ? new Date(product.dateAdded).toLocaleDateString() 
-                      : 'N/A';
-                    
                     return (
                       <tr key={product._id}>
                         <td className="px-3 py-2 border">{index+1}</td>

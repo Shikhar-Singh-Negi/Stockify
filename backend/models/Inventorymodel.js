@@ -13,15 +13,24 @@ const InventorySchema = new mongoose.Schema(
 );
 
 
-InventorySchema.pre("save", function (next) {
-  if (this.quantity === 0) {
-    this.status = "out-of-stock";
-  } else if (this.quantity < 10) { 
-    this.status = "low-stock";
-  } else {
-    this.status = "in-stock";
+InventorySchema.pre("save", async function (next) {
+  try {
+    const Product = mongoose.model("Product");
+    const product = await Product.findById(this.product);
+    
+    const threshold = product ? product.lowStockThreshold : 10;
+    
+    if (this.quantity === 0) {
+      this.status = "out-of-stock";
+    } else if (this.quantity < threshold) { 
+      this.status = "low-stock";
+    } else {
+      this.status = "in-stock";
+    }
+    next();
+  } catch (error) {
+    next(error);
   }
-  next();
 });
 
 const Inventory= mongoose.model("Inventory", InventorySchema);

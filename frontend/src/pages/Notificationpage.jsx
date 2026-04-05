@@ -4,7 +4,7 @@ import { IoMdAdd } from "react-icons/io";
 import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import image from "../images/user.png";
-import { createNotification, getAllNotifications, deleteNotification } from "../features/notificationSlice"; 
+import { createNotification, getAllNotifications, deleteNotification } from "../features/notificationSlice";
 import { io } from "socket.io-client";
 import toast from 'react-hot-toast';
 import FormattedTime from "../lib/FormattedTime";
@@ -19,7 +19,7 @@ function NotificationPage() {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io("https://advanced-inventory-management-system-v1.onrender.com", {
+    const newSocket = io("https://stockify-backend-six.vercel.app", {
       withCredentials: true,
       transports: ["websocket", "polling"],
     });
@@ -28,19 +28,19 @@ function NotificationPage() {
     dispatch(getAllNotifications());
 
     newSocket.on("newNotification", (newNotification) => {
-   
+
       toast.custom((t) => (
         <div className={`flex items-center p-4 rounded-lg shadow-lg bg-white text-gray-800 ${t.visible ? 'animate-enter' : 'animate-leave'}`}>
-          <img 
-            src={Authuser?.ProfilePic || image} 
-            alt="Notification" 
+          <img
+            src={Authuser?.ProfilePic || image}
+            alt="Notification"
             className="w-10 h-10 rounded-full mr-3"
           />
           <div>
             <p className="font-medium">{newNotification.name}</p>
             <p className="text-sm text-gray-600">{newNotification.type}</p>
           </div>
-          <button 
+          <button
             onClick={() => toast.dismiss(t.id)}
             className="ml-4 text-gray-500 hover:text-gray-700"
           >
@@ -98,9 +98,9 @@ function NotificationPage() {
           <div className="p-6 rounded-lg bg-base-100 shadow-md mb-6">
             <div className="flex bg-base-100 justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">Add Notification</h2>
-              <MdClose 
-                className="text-2xl cursor-pointer" 
-                onClick={() => setIsFormVisible(false)} 
+              <MdClose
+                className="text-2xl cursor-pointer"
+                onClick={() => setIsFormVisible(false)}
               />
             </div>
             <form onSubmit={submitNotification}>
@@ -139,16 +139,16 @@ function NotificationPage() {
           {notifications.length > 0 ? (
             notifications.map((notification) => (
               <div key={notification._id} className="flex items-center bg-base-300 p-4 rounded-lg shadow-md hover:bg-base-200 transition">
-                <img 
-                  src={Authuser?.ProfilePic || image} 
-                  alt="User" 
+                <img
+                  src={Authuser?.ProfilePic || image}
+                  alt="User"
                   className="w-12 h-12 rounded-full mr-4 object-cover"
                 />
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold">{notification.name}</h3>
                   <p className="text-sm text-gray-600">{notification.type}</p>
                   <p className="text-xs text-gray-500 mt-1">
-                    <FormattedTime timestamp={notification.createdAt}/>
+                    <FormattedTime timestamp={notification.createdAt} />
                   </p>
                 </div>
                 <button

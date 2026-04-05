@@ -122,7 +122,7 @@ const[query,setquery]=useState("");
 
 
         {isFormVisible && (
-          <div className="absolute top-10 bg-base-100 bg-gray-100 right-0 h-svh p-6 border-2 border-gray-300 rounded-lg shadow-md transition-transform transform">
+          <div className="fixed top-16 bg-base-100 bg-gray-100 right-0 h-svh w-full md:w-96 p-6 border-2 border-gray-300 rounded-lg shadow-md transition-transform transform z-50 overflow-y-auto">
             <div className="text-right">
               <MdKeyboardDoubleArrowLeft
                 onClick={() => setIsFormVisible(false)}

@@ -15,6 +15,10 @@ const NotificationSchema= new mongoose.Schema({
         require:true,
         
     },
+    read:{
+        type:Boolean,
+        default:false
+    },
     createdAt:{
         type:Date,
         default:Date.now
