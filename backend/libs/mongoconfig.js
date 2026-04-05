@@ -4,7 +4,7 @@ const mongoose=require("mongoose")
 require("dotenv").config()
 
 module.exports.MongoDBconfig=()=>{
-    mongoose.connect(process.env.MONGODB_URL)
+    mongoose.connect(process.env.ATLASDB_URL || process.env.MONGODB_URL)
     .then(()=>{
         console.log("connected to database successfully")
     })
