@@ -4,19 +4,24 @@ import { useEffect, useState } from "react";
 import { getAllActivityLogs, getsingleUserActivityLogs } from "../features/activitySlice";
 import TopNavbar from "../Components/TopNavbar";
 import FormattedTime from "../lib/FormattedTime";
+import toast from "react-hot-toast";
+import axiosInstance from "../lib/axios";
+
+const fallbackURL = "https://advanced-inventory-management-system-v1.onrender.com";
+const socket = io(process.env.REACT_APP_BACKEND_URL || fallbackURL, {
+   withCredentials: true,
+   transports: ["websocket", "polling"], 
+});
 
 function Activitylogpage() {
   const [logs, setLogs] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showConfirm, setShowConfirm] = useState(false);
   const logsPerPage = 10;
 
   const { activityLogs, isFetching, userdata } = useSelector((state) => state.activity);
   const { Authuser } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-
-  const socket = io("https://advanced-inventory-management-system-v1.onrender.com", {
-     withCredentials: true,
-     transports: ["websocket", "polling"], });
 
   useEffect(() => {
     if (Authuser?.id) {
@@ -42,11 +47,32 @@ function Activitylogpage() {
   const currentLogs = (logs || []).slice(indexOfFirstLog, indexOfLastLog);
   const totalPages = Math.ceil((logs || []).length / logsPerPage);
 
+  const handleDeleteOldLogs = async () => {
+    try {
+      const res = await axiosInstance.delete("activitylogs/deleteOldLogs");
+      toast.success(res.data.message || "Logs cleaned up");
+      dispatch(getAllActivityLogs());
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete old logs");
+    }
+  };
+
   return (
     <div className="bg-base-100 min-h-screen">
       <TopNavbar />
       <div className="mt-10 ml-5">
-        <h1 className="text-xl font-semibold mb-4">Activity Logs</h1>
+        <div className="flex items-center justify-between mb-4 mr-5">
+          <h1 className="text-xl font-semibold">Activity Logs</h1>
+          {Authuser?.role === 'admin' && (
+            <button
+              onClick={() => setShowConfirm(true)}
+              className="btn btn-error btn-sm text-white"
+            >
+              Delete Logs &gt; 10
+            </button>
+          )}
+        </div>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-base-100 mb-24 border-gray-200 rounded-lg shadow-md">
             <thead className="bg-base-100">
@@ -114,6 +140,30 @@ function Activitylogpage() {
           </button>
         </div>
       </div>
+
+      {/* Custom Confirmation Modal */}
+      {showConfirm && (
+        <div className="modal modal-open">
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">Confirm Deletion</h3>
+            <p className="py-4">Are you sure you want to delete all older activity logs? This action cannot be undone.</p>
+            <div className="modal-action">
+              <button className="btn" onClick={() => setShowConfirm(false)}>
+                Cancel
+              </button>
+              <button
+                className="btn btn-error text-white"
+                onClick={() => {
+                  setShowConfirm(false);
+                  handleDeleteOldLogs();
+                }}
+              >
+                Delete Logs
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

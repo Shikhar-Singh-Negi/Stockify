@@ -91,5 +91,18 @@ module.exports = (app) => {
     }
   });
 
+  router.delete('/deleteOldLogs', async (req, res) => {
+    try {
+      const logsToKeep = await ActivityLog.find().sort({ createdAt: -1 }).limit(10);
+      const keepIds = logsToKeep.map(log => log._id);
+
+      const result = await ActivityLog.deleteMany({ _id: { $nin: keepIds } });
+      res.status(200).json({ message: "Successfully deleted old logs", deletedCount: result.deletedCount });
+    } catch (error) {
+      console.error("Failed to delete old logs:", error);
+      res.status(500).json({ message: "Failed to delete old logs", error: error.message });
+    }
+  });
+
   return router;
 };

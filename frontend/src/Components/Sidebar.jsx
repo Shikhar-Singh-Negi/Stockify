@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { AiOutlineProduct } from "react-icons/ai";
 import { RiStockLine } from "react-icons/ri";
 import { FiLogOut, FiShoppingCart } from "react-icons/fi";
-import { MdOutlineInventory2, MdPointOfSale, MdOutlineCategory } from "react-icons/md";
+import { MdPointOfSale, MdOutlineCategory } from "react-icons/md";
 import { TfiSupport } from "react-icons/tfi";
 import { IoNotificationsOutline } from "react-icons/io5";
 import { RxActivityLog, RxDashboard } from "react-icons/rx";
@@ -37,12 +37,15 @@ function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col w-64 text-black min-h-screen p-6 shadow-lg ">
-      <h1 className="text-2xl font-bold text-center text-gray-700 mb-10"> <img src={logo1} className='w-56 bg-white' alt="sample logo"></img></h1>
+    <div className="flex flex-col w-64 min-h-screen p-6 shadow-lg bg-slate-950 text-gray-300">
+      <div className="flex flex-col items-center mb-10">
+        <img src={logo1} className="w-24 bg-white rounded-md p-1" alt="sample logo" />
+        <h1 className="text-lg font-bold text-white mt-4">Hi, {Authuser?.name || Authuser?.role || 'User'}</h1>
+      </div>
 
       <nav className="space-y-4">
   
-        <div className="text-lg mt-10 flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+        <div className="text-lg mt-10 flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
           <RxDashboard className="text-xl" />
           <Link to={`/${Authuser?.role === 'staff' ? 'StaffDashboard' : Authuser?.role === 'admin' ? 'AdminDashboard' : 'ManagerDashboard'}`}>Dashboard</Link>
         </div>
@@ -50,39 +53,39 @@ function Sidebar() {
    
         {Authuser?.role === "manager" && (
           <ul className="space-y-2">
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <AiOutlineProduct className="text-xl" />
               <Link to="/ManagerDashboard/product">Product</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <RxActivityLog className="text-xl" />
               <Link to="/ManagerDashboard/activity-log">Activity Log</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <TfiSupport className="text-xl" />
               <Link to="/ManagerDashboard/supplier">Supplier</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <MdPointOfSale className="text-xl" />
               <Link to="/ManagerDashboard/sales">Sales</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <FiShoppingCart className="text-xl" />
               <Link to="/ManagerDashboard/order">Order</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <RiStockLine className="text-xl" />
               <Link to="/ManagerDashboard/stock-transaction">Stock Transaction</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <IoNotificationsOutline className="text-xl" />
               <Link to="/ManagerDashboard/NotificationPageRead">Notifications</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <MdOutlineCategory className="text-xl" />
               <Link to="/ManagerDashboard/category">Category</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <LuUsers className="text-xl" />
               <Link to="/ManagerDashboard/Userstatus" className="flex items-center gap-2">
                 Users
@@ -99,39 +102,39 @@ function Sidebar() {
 
         {Authuser?.role === "admin" && (
           <ul className="space-y-2">
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <AiOutlineProduct className="text-xl" />
               <Link to="/AdminDashboard/product">Product</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <RxActivityLog className="text-xl" />
               <Link to="/AdminDashboard/activity-log">Activity Log</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <TfiSupport className="text-xl" />
               <Link to="/AdminDashboard/supplier">Supplier</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <MdPointOfSale className="text-xl" />
               <Link to="/AdminDashboard/sales">Sales</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <FiShoppingCart className="text-xl" />
               <Link to="/AdminDashboard/order">Order</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <RiStockLine className="text-xl" />
               <Link to="/AdminDashboard/stock-transaction">Stock Transaction</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <IoNotificationsOutline className="text-xl" />
               <Link to="/AdminDashboard/notifications">Create Notifications</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <MdOutlineCategory className="text-xl" />
               <Link to="/AdminDashboard/category">Category</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <LuUsers className="text-xl" />
               <Link to="/AdminDashboard/Userstatus" className="flex items-center gap-2">
                 Users
@@ -148,28 +151,28 @@ function Sidebar() {
         
         {Authuser?.role === "staff" && (
           <ul className="space-y-2">
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <AiOutlineProduct className="text-xl" />
               <Link to="/StaffDashboard/product">Product</Link>
             </li>
 
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <TfiSupport className="text-xl" />
               <Link to="/StaffDashboard/supplier">Supplier</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <MdPointOfSale className="text-xl" />
               <Link to="/StaffDashboard/sales">Sales</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <FiShoppingCart className="text-xl" />
               <Link to="/StaffDashboard/order">Order</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <RiStockLine className="text-xl" />
               <Link to="/StaffDashboard/stock-transaction">Stock Transaction</Link>
             </li>
-            <li className="flex items-center space-x-3 text-gray-700 hover:text-blue-700 cursor-pointer p-2 rounded-md transition">
+            <li className="flex items-center space-x-3 text-gray-300 hover:text-white cursor-pointer p-2 rounded-md transition">
               <IoNotificationsOutline className="text-xl" />
               <Link to="/StaffDashboard/NotificationPageRead">Notifications</Link>
             </li>
@@ -177,8 +180,8 @@ function Sidebar() {
         )}
       </nav>
 
-      <div className="mt-auto border-t pt-4">
-        <div className="flex items-center space-x-3 text-lg text-gray-700 hover:text-red-600 cursor-pointer p-2 rounded-md transition">
+      <div className="mt-auto border-t border-gray-600 pt-4">
+        <div className="flex items-center space-x-3 text-lg text-gray-300 hover:text-red-400 cursor-pointer p-2 rounded-md transition">
           <FiLogOut className="text-xl" />
           <span onClick={handleLogout}>Logout</span>
         </div>
