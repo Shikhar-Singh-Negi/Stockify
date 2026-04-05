@@ -55,12 +55,12 @@ function HomePage() {
 
         <div className="max-w-6xl w-full relative z-10 mt-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
           <div className="text-left">
-            <h1 className='text-lg text-indigo-600 mb-6 animate-pulse font-semibold'>✧ Modern and Scalable</h1>
+            <h1 className='text-lg text-indigo-600 mb-6 animate-pulse font-semibold'>✧ Work Smarter, Grow Faster</h1>
             <h1 className="text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-600 leading-tight">
-              Comprehensive Inventory Management Tools
+              Inventory That Works Smarter, Not Harder
             </h1>
             <p className="text-xl text-gray-700 mb-8 max-w-lg">
-              Experience the perfect blend of power and simplicity. Connect your data, teams, and customers with our AI-driven CRM platform that scales with your business.
+              A modern inventory platform built to adapt with your business—combining clarity, speed, and powerful automation in one place.
             </p>
           </div>
 
@@ -95,19 +95,20 @@ function HomePage() {
 
           <div className="mb-16">
             <h2 className="text-3xl font-bold text-indigo-700 mb-8">Our Trusted Partners</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { name: "TechCorp", role: "Cloud Solutions" },
-                { name: "LogiFast", role: "Delivery Logistics" },
-                { name: "DataSecure", role: "Cybersecurity" },
-                { name: "FinEdge", role: "Payment Gateways" }
+                { name: "TechCorp", role: "Cloud Infrastructure", description: "Providing highly scalable and secure cloud infrastructure to ensure our platform is always online and ready." },
+                { name: "LogiFast", role: "Global Logistics", description: "Enabling lightning-fast delivery networks and real-time shipment tracking worldwide." },
+                { name: "DataSecure", role: "Cybersecurity", description: "Ensuring top-tier end-to-end encryption and enterprise-level threat protection for all your data." },
+                { name: "FinEdge", role: "Financial Processing", description: "Powering seamless and secure payment gateways for global transactions with minimal fees." }
               ].map((partner, idx) => (
-                <div key={idx} className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6 flex flex-col items-center justify-center hover:shadow-md transition-all">
-                  <div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mb-4 text-indigo-500 font-bold text-xl">
+                <div key={idx} className="bg-white rounded-xl shadow-sm border border-indigo-100 p-6 flex flex-col items-center justify-start hover:shadow-md transition-all">
+                  <div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mb-4 text-indigo-500 font-bold text-xl flex-shrink-0">
                     {partner.name[0]}
                   </div>
-                  <h3 className="font-semibold text-indigo-900">{partner.name}</h3>
-                  <p className="text-sm text-indigo-500">{partner.role}</p>
+                  <h3 className="font-semibold text-indigo-900 text-lg mb-1">{partner.name}</h3>
+                  <p className="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-3">{partner.role}</p>
+                  <p className="text-sm text-gray-600 leading-relaxed text-center">{partner.description}</p>
                 </div>
               ))}
             </div>

@@ -43,7 +43,7 @@ module.exports = (app) => {
 
   router.get('/getAllLogs', async (req, res) => {
     try {
-      const logs = await ActivityLog.find().populate("userId");
+      const logs = await ActivityLog.find().sort({ createdAt: -1 }).populate("userId");
       res.status(200).json(logs);
     } catch (error) {
       console.error("Failed to fetch logs:", error);
@@ -67,7 +67,7 @@ module.exports = (app) => {
   router.get('/getLogs/:userid', async (req, res) => {
     const { userid } = req.params;
     try {
-      const logs = await ActivityLog.find({ userId: userid }).populate("userId");
+      const logs = await ActivityLog.find({ userId: userid }).sort({ createdAt: -1 }).populate("userId");
       res.status(200).json(logs);
     } catch (error) {
       console.error("Failed to fetch logs for user:", userid, error);
@@ -78,6 +78,12 @@ module.exports = (app) => {
   router.delete('/deleteLog', async (req, res) => {
     try {
       const { id } = req.body;
+
+      const recentLogs = await ActivityLog.find().sort({ createdAt: -1 }).limit(10);
+      if (recentLogs.some(log => log._id.toString() === id)) {
+        return res.status(403).json({ message: "Cannot delete any of the 10 most recent logs." });
+      }
+
       const deletedLog = await ActivityLog.findByIdAndDelete(id);
 
       if (!deletedLog) {
